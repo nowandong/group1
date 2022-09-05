@@ -13,8 +13,9 @@ public class PickupCanceled extends AbstractEvent {
     private String returnMethod;
     private String status;
 
-    public PickupCanceled(PickupHistory aggregate){
+    public PickupCanceled(PickupHistory aggregate){        
         super(aggregate);
+        System.out.println("Test Pickup Canceld!");
     }
     public PickupCanceled(){
         super();

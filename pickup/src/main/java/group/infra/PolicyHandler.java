@@ -1,5 +1,8 @@
 package group.infra;
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.naming.NameParser;
 
 import javax.naming.NameParser;
@@ -29,11 +32,18 @@ public class PolicyHandler{
         DeliveryStarted event = deliveryStarted;
         System.out.println("\n\n##### listener UpdateStatus : " + deliveryStarted + "\n\n");
 
+        
+        Long pickupId = event.getPickupId();
+        Optional<PickupHistory> pickUpHistory = pickupHistoryRepository.findById(pickupId);
+        pickUpHistory.ifPresent(history -> {
+            history.setStatus("DeliveryStarted");
+            pickupHistoryRepository.save(history);
+        });
 
         
 
         // Sample Logic //
-        PickupHistory.updateStatus(event);
+        // PickupHistory.updateStatus(event);
         
 
         
