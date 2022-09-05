@@ -24,12 +24,11 @@ public class PolicyHandler{
 
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryStarted'")
     public void wheneverDeliveryStarted_SendNotification(@Payload DeliveryStarted deliveryStarted){
-
+       
+        Long PickupId = deliveryStarted.getPickupId();
         DeliveryStarted event = deliveryStarted;
         System.out.println("\n\n##### listener SendNotification : " + deliveryStarted + "\n\n");
-
-
-        
+        System.out.println(PickupId+" 세탁물 픽업을 시작합니다."); 
 
         // Sample Logic //
 
@@ -41,9 +40,10 @@ public class PolicyHandler{
 
         DeliveryRequestCanceled event = deliveryRequestCanceled;
         System.out.println("\n\n##### listener SendNotification : " + deliveryRequestCanceled + "\n\n");
+        Long PickupId = deliveryRequestCanceled.getPickupId();
 
+        System.out.println(PickupId+" 세탁물 픽업 취소합니다."); 
 
-        
 
         // Sample Logic //
 
@@ -56,8 +56,11 @@ public class PolicyHandler{
         PickupRequested event = pickupRequested;
         System.out.println("\n\n##### listener SendNotification : " + pickupRequested + "\n\n");
 
+        Long PickupId = pickupRequested.getId();
+        String status = pickupRequested.getStatus();
 
-        
+        System.out.println(PickupId+" 세탁물 픽업 "+status + " 로 요청합니다."); 
+
 
         // Sample Logic //
 

@@ -74,3 +74,12 @@ api:
   url:
     pay: pay:8080
 
+feign:
+ hystrix:
+   enabled: true
+
+hystrix:
+ command:
+   # 전역설정
+   default:
+     execution.isolation.thread.timeoutInMilliseconds: 610

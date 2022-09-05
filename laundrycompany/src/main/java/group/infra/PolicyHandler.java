@@ -13,6 +13,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import group.domain.*;
+import java.util.Optional;
 
 
 @Service
@@ -29,16 +30,11 @@ public class PolicyHandler{
         PaymentApproved event = paymentApproved;
         System.out.println("\n\n##### listener ReceiveLaundry : " + paymentApproved + "\n\n");
 
-
-        
-
         // Sample Logic //
+
         LaundryHistory.receiveLaundry(event);
-        
-
-        
-
     }
+    
 
     @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='ReturnMethodChanged'")
     public void wheneverReturnMethodChanged_ChangeReturnMethod(@Payload ReturnMethodChanged returnMethodChanged){

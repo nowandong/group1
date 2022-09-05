@@ -1,4 +1,4 @@
-package group.domain;
+ package group.domain;
 
 import group.domain.*;
 import group.infra.AbstractEvent;

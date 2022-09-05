@@ -1,5 +1,5 @@
 server:
-  port: 8088
+  port: 8080
 
 ---
 
@@ -8,18 +8,22 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: BoundedContext497
+        - id: pickup
           uri: http://localhost:8081
           predicates:
             - Path=, 
-        - id: order
+        - id: pay
           uri: http://localhost:8082
           predicates:
             - Path=, 
-        - id: frontend
-          uri: http://localhost:8080
+        - id: laundrycompany
+          uri: http://localhost:8083
           predicates:
             - Path=/**
+        - id: message
+          uri: http://localhost:8084
+          predicates:
+            - Path=,     
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -39,18 +43,22 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: BoundedContext497
-          uri: http://boundedContext497:8080
+        - id: pickup
+          uri: http://pickup:8080
           predicates:
-            - Path=, 
-        - id: order
-          uri: http://order:8080
+            - Path=/pickup/**, 
+        - id: pay
+          uri: http://pay:8080
           predicates:
-            - Path=, 
-        - id: frontend
-          uri: http://frontend:8080
+            - Path=/pay/**, 
+        - id: laundrycompany
+          uri: http://laundrycompany:8080
           predicates:
-            - Path=/**
+            - Path=/laundrycompany/**
+        - id: message
+          uri: http://message:8080
+          predicates:
+            - Path=/message/**    
       globalcors:
         corsConfigurations:
           '[/**]':

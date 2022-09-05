@@ -4,6 +4,9 @@ import group.domain.PaymentCanceled;
 import group.domain.PaymentApproved;
 import group.PayApplication;
 import javax.persistence.*;
+
+import org.springframework.kafka.annotation.KafkaListener;
+
 import java.util.List;
 import lombok.Data;
 import java.util.Date;
@@ -12,33 +15,14 @@ import java.util.Date;
 @Table(name="PaymentHistory_table")
 @Data
 
-public class PaymentHistory  {
-
-    
+public class PaymentHistory  {    
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    
-    
-    
-    
-    
     private Long id;
-    
-    
-    
-    
-    
     private Long pickupId;
 
     @PostPersist
     public void onPostPersist(){
-
-
-        PaymentCanceled paymentCanceled = new PaymentCanceled(this);
-        paymentCanceled.publishAfterCommit();
-
-
-
         PaymentApproved paymentApproved = new PaymentApproved(this);
         paymentApproved.publishAfterCommit();
 
@@ -49,29 +33,16 @@ public class PaymentHistory  {
         return paymentHistoryRepository;
     }
 
+   public static void cancelPayment(PickupCanceled pickupCanceled){
 
+        repository().findByPickupId(pickupCanceled.getId()).ifPresent(paymentHistory->{
+            // kafka publish.
+            PaymentCanceled paymentCanceled = new PaymentCanceled(paymentHistory);
+            paymentCanceled.publishAfterCommit();
 
-
-    public static void cancelPayment(PickupCanceled pickupCanceled){
-
-        /** Example 1:  new item 
-        PaymentHistory paymentHistory = new PaymentHistory();
-        repository().save(paymentHistory);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(pickupCanceled.get???()).ifPresent(paymentHistory->{
-            
-            paymentHistory // do something
-            repository().save(paymentHistory);
-
-
-         });
-        */
-
-        
+            // 주문 데이터 삭제.
+            repository().delete(paymentHistory);            
+        });
     }
 
 

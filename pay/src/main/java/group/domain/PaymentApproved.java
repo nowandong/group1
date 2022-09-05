@@ -14,9 +14,11 @@ public class PaymentApproved extends AbstractEvent {
 
     public PaymentApproved(PaymentHistory aggregate){
         super(aggregate);
+        System.out.println("PamentApproved1");
     }
     public PaymentApproved(){
         super();
+        System.out.println("PamentApproved1");
     }
     // keep
 
