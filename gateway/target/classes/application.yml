@@ -1,0 +1,82 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: pickup
+          uri: http://localhost:8081
+          predicates:
+            - Path=/pickupHistories/**, /laundryStatuses/**
+        - id: pay
+          uri: http://localhost:8082
+          predicates:
+            - Path=/paymentHistories/**, 
+        - id: laundrycompany
+          uri: http://localhost:8083
+          predicates:
+            - Path=/laundryHistories/**, 
+        - id: message
+          uri: http://localhost:8084
+          predicates:
+            - Path=, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: pickup
+          uri: http://pickup:8080
+          predicates:
+            - Path=/pickupHistories/**, /laundryStatuses/**
+        - id: pay
+          uri: http://pay:8080
+          predicates:
+            - Path=/paymentHistories/**, 
+        - id: laundrycompany
+          uri: http://laundrycompany:8080
+          predicates:
+            - Path=/laundryHistories/**, 
+        - id: message
+          uri: http://message:8080
+          predicates:
+            - Path=, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
