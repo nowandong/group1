@@ -22,8 +22,6 @@ public class PickupHistory  {
     private String returnMethod;
     private String status;
 
-    private static KafkaProcessor kafkaProcessor;
-
     @PostPersist
     public void onPostPersist(){
 
@@ -41,14 +39,11 @@ public class PickupHistory  {
         PickupApplication.applicationContext.getBean(group.external.PaymentHistoryService.class)
             .pay(paymentHistory);
 
-
         PickupRequested pickupRequested = new PickupRequested(this);
 
         // request 시 등록.
         pickupRequested.publishAfterCommit();
-        // kafka message 발행. (pub/sub 패턴, pub)
         
-        kafkaProcessor.outboundTopic().send(MessageBuilder.withPayload(pickupRequested).build());
     }
 
     public static PickupHistoryRepository repository(){
@@ -69,28 +64,28 @@ public class PickupHistory  {
 
     }
 
-    public static void updateStatus(DeliveryStarted deliveryStarted){
-        // kafka subscribe?
-        //kafkaProcessor.inboundTopic().subscribe(handler);
-        /** Example 1:  new item 
-        PickupHistory pickupHistory = new PickupHistory();
-        repository().save(pickupHistory);
+    // public static void updateStatus(DeliveryStarted deliveryStarted){
+    //     // kafka subscribe?
+    //     //kafkaProcessor.inboundTopic().subscribe(handler);
+    //     /** Example 1:  new item 
+    //     PickupHistory pickupHistory = new PickupHistory();
+    //     repository().save(pickupHistory);
 
-        */
+    //     */
 
-        /** Example 2:  finding and process
+    //     /** Example 2:  finding and process
         
-        repository().findById(deliveryStarted.get???()).ifPresent(pickupHistory->{
+    //     repository().findById(deliveryStarted.get???()).ifPresent(pickupHistory->{
             
-            pickupHistory // do something
-            repository().save(pickupHistory);
+    //         pickupHistory // do something
+    //         repository().save(pickupHistory);
 
 
-         });
-        */
+    //      });
+    //     */
 
         
-    }
+    // }
 
 
 }
