@@ -22,7 +22,7 @@ public class PickupHistoryController {
 
 
     @RequestMapping(value = "pickupHistories/{id}/cancel",
-        method = RequestMethod.PUT,
+        method = RequestMethod.GET,
         produces = "application/json;charset=UTF-8")
     public PickupHistory cancel(@PathVariable(value = "id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
             System.out.println("##### /pickupHistory/cancel  called #####");
@@ -32,7 +32,7 @@ public class PickupHistoryController {
             PickupHistory pickupHistory = optionalPickupHistory.get();
             pickupHistory.cancel();
             
-            pickupHistoryRepository.save(pickupHistory);
+            // pickupHistoryRepository.save(pickupHistory);
             return pickupHistory;
             
     }
@@ -49,9 +49,10 @@ public class PickupHistoryController {
             
             optionalPickupHistory.orElseThrow(()-> new Exception("No Entity Found"));
             PickupHistory pickupHistory = optionalPickupHistory.get();
+
             pickupHistory.changeReturnMethod(changeReturnMethodCommand);
             
-            pickupHistoryRepository.save(pickupHistory);
+            // pickupHistoryRepository.save(pickupHistory);
             return pickupHistory;
             
     }

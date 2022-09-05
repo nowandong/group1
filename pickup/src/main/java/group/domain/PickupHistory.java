@@ -3,10 +3,17 @@ package group.domain;
 import group.PickupApplication;
 import group.config.kafka.KafkaProcessor;
 
+import java.util.Optional;
+
 import javax.persistence.*;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import lombok.Data;
 
 @Entity
@@ -52,14 +59,20 @@ public class PickupHistory  {
     }
 
 
-
     public void cancel(){
         PickupCanceled pickupCanceled = new PickupCanceled(this);
+        BeanUtils.copyProperties(this, pickupCanceled);
+        repository().delete(this);
         pickupCanceled.publishAfterCommit();
 
     }
+
+
     public void changeReturnMethod(ChangeReturnMethodCommand changeReturnMethodCommand){
-        ReturnMethodChanged returnMethodChanged = new ReturnMethodChanged(this);
+        ReturnMethodChanged returnMethodChanged = new ReturnMethodChanged();
+        this.setReturnMethod(changeReturnMethodCommand.getPickupMethod());
+        BeanUtils.copyProperties(this, returnMethodChanged);
+        repository().save(this);
         returnMethodChanged.publishAfterCommit();
 
     }
