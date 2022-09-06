@@ -16,6 +16,7 @@ public class PickupRequested extends AbstractEvent {
     public PickupRequested(PickupHistory aggregate){
         super(aggregate);
     }
+
     public PickupRequested(){
         super();
     }

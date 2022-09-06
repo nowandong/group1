@@ -23,6 +23,7 @@ public class PaymentHistory  {
 
     @PostPersist
     public void onPostPersist(){
+        
         PaymentApproved paymentApproved = new PaymentApproved(this);
         paymentApproved.publishAfterCommit();
 

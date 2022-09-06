@@ -11,9 +11,11 @@ import lombok.Data;
 public class LaundryStatus {
 
         @Id
-        //@GeneratedValue(strategy=GenerationType.AUTO)
+        @GeneratedValue(strategy=GenerationType.TABLE)
         private Long id;
-        private String status;
 
+        private String status;
+        private String returnMethod;
+        private Long pickupId;
 
 }

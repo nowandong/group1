@@ -19,12 +19,11 @@ import lombok.Data;
 @Entity
 @Table(name="PickupHistory_table")
 @Data
-@EnableBinding(value= {KafkaProcessor.class})//, MessageBinder.class})
+// @EnableBinding(value= {KafkaProcessor.class})//, MessageBinder.class})
 public class PickupHistory  {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-        
     private Long id;
     private String returnMethod;
     private String status;
@@ -48,8 +47,18 @@ public class PickupHistory  {
 
         PickupRequested pickupRequested = new PickupRequested(this);
 
+
         // request 시 등록.
         pickupRequested.publishAfterCommit();
+
+        // try {
+        //     long delay = (long) (400 + Math.random() * 220);
+            
+        //     System.out.println("부하테스트! " + delay);
+        //     Thread.currentThread().sleep(delay);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
         
     }
 

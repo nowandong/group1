@@ -8,9 +8,11 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel="laundryStatuses", path="laundryStatuses")
 public interface LaundryStatusRepository extends PagingAndSortingRepository<LaundryStatus, Long> {
 
-    
+    List<LaundryStatus> findByPickupId(Long pickupId);
 
-    
+
+    void deleteByPickupId(Long pickupId);
+
 
     // keep
 
