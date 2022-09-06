@@ -11,19 +11,23 @@ spring:
         - id: pickup
           uri: http://localhost:8081
           predicates:
-            - Path=, 
+            - Path=/pickupHistories/**, /laundryStatuses/**
         - id: pay
           uri: http://localhost:8082
           predicates:
-            - Path=, 
+            - Path=/paymentHistories/**, 
         - id: laundrycompany
           uri: http://localhost:8083
           predicates:
-            - Path=/**
+            - Path=/laundryHistories/**, 
         - id: message
           uri: http://localhost:8084
           predicates:
-            - Path=,     
+            - Path=, 
+        - id: frontend
+          uri: http://localhost:8088
+          predicates:
+            - Path=/**
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -46,19 +50,23 @@ spring:
         - id: pickup
           uri: http://pickup:8080
           predicates:
-            - Path=/pickup/**, 
+            - Path=/pickupHistories/**, /laundryStatuses/**
         - id: pay
           uri: http://pay:8080
           predicates:
-            - Path=/pay/**, 
+            - Path=/paymentHistories/**, 
         - id: laundrycompany
           uri: http://laundrycompany:8080
           predicates:
-            - Path=/laundrycompany/**
+            - Path=/laundryHistories/**, 
         - id: message
           uri: http://message:8080
           predicates:
-            - Path=/message/**    
+            - Path=, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
       globalcors:
         corsConfigurations:
           '[/**]':

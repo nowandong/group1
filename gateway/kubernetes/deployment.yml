@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: username/gateway:latest
+          image: 936103362868.dkr.ecr.eu-central-1.amazonaws.com/gateway:v1 #username을 fullname으로 수정해야함.
           ports:
             - containerPort: 8080

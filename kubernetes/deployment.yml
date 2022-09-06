@@ -3,22 +3,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: BoundedContext497
+  name: pickup
   labels:
-    app: BoundedContext497
+    app: pickup
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: BoundedContext497
+      app: pickup
   template:
     metadata:
       labels:
-        app: BoundedContext497
+        app: pickup
     spec:
       containers:
-        - name: BoundedContext497
-          image: username/BoundedContext497:latest
+        - name: pickup
+          image: username/pickup:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pay
+  labels:
+    app: pay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pay
+  template:
+    metadata:
+      labels:
+        app: pay
+    spec:
+      containers:
+        - name: pay
+          image: username/pay:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -43,22 +84,80 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order
+  name: laundrycompany
   labels:
-    app: order
+    app: laundrycompany
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order
+      app: laundrycompany
   template:
     metadata:
       labels:
-        app: order
+        app: laundrycompany
     spec:
       containers:
-        - name: order
-          image: username/order:latest
+        - name: laundrycompany
+          image: username/laundrycompany:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+          env:
+            - name: MAX_LAUNDRYCOUNT_PER_PERSON
+              valueFrom:
+                configMapKeyRef:
+                  name: team01-config
+                  key: max_laundrycount_per_person
+            - name: UI_PROPERTIES_FILE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: team01-config
+                  key: ui_properties_file_name
+          volumeMounts:
+            - mountPath: "/mnt/aws"
+              name: volume
+      volumes:
+        - name: volume
+          persistentvolumeclaim:
+            claimname: aws-efs
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message
+  labels:
+    app: message
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message
+  template:
+    metadata:
+      labels:
+        app: message
+    spec:
+      containers:
+        - name: message
+          image: username/message:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -85,15 +184,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: BoundedContext497
+  name: pickup
   labels:
-    app: BoundedContext497
+    app: pickup
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: BoundedContext497
+    app: pickup
 
 
 ---
@@ -102,13 +201,47 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: order
+  name: pay
   labels:
-    app: order
+    app: pay
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: order
+    app: pay
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: laundrycompany
+  labels:
+    app: laundrycompany
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: laundrycompany
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: message
+  labels:
+    app: message
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: message
 

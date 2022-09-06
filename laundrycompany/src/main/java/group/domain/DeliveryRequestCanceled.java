@@ -11,6 +11,7 @@ public class DeliveryRequestCanceled extends AbstractEvent {
 
     private Long id;
     private Long pickupId;
+    private String returnMethod;
 
     public DeliveryRequestCanceled(LaundryHistory aggregate){
         super(aggregate);

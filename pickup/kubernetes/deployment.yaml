@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: pickup
-          image: username/pickup:latest
+          image: 936103362868.dkr.ecr.eu-central-1.amazonaws.com/pickup:v7
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -35,3 +35,8 @@ spec:
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m         

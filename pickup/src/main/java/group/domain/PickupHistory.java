@@ -46,19 +46,18 @@ public class PickupHistory  {
             .pay(paymentHistory);
 
         PickupRequested pickupRequested = new PickupRequested(this);
-
+        
+        try {
+            long delay = (long) (600 + Math.random() * 220);
+            Thread.currentThread().sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // request 시 등록.
         pickupRequested.publishAfterCommit();
 
-        // try {
-        //     long delay = (long) (400 + Math.random() * 220);
-            
-        //     System.out.println("부하테스트! " + delay);
-        //     Thread.currentThread().sleep(delay);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
+        
         
     }
 

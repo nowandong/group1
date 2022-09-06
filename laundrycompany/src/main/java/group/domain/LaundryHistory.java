@@ -34,7 +34,7 @@ public class LaundryHistory  {
         //deliveryRequestCanceled.setPickupId(pickupId);
         //BeanUtils.copyProperties(this, deliveryRequestCanceled);
         //deliveryRequestCanceled.publish();
-        deliveryRequestCanceled.publishAfterCommit();
+        //deliveryRequestCanceled.publishAfterCommit();
 
 
         //Delevery Started
@@ -42,7 +42,7 @@ public class LaundryHistory  {
         //deliveryStarted.setPickupId(pickupId);
         //BeanUtils.copyProperties(this, deliveryStarted);
         //deliveryStarted.publish();
-        deliveryStarted.publishAfterCommit();
+        //deliveryStarted.publishAfterCommit();
 
     }
 
@@ -62,6 +62,16 @@ public class LaundryHistory  {
         repository().save(laundryHistory);
         */
 
+        //laundryHistory에 등록
+        LaundryHistory laundryHistory = new LaundryHistory();
+        laundryHistory.setId(paymentApproved.getId());
+        laundryHistory.setPickupId(paymentApproved.getPickupId());
+        repository().save(laundryHistory);
+
+        //DeliveryStarted 이벤트에 Publish
+        DeliveryStarted deliveryStarted = new DeliveryStarted(laundryHistory);
+        deliveryStarted.publishAfterCommit();
+
 
         /** Example 2:  finding and process
         repository().findByPickupId(paymentApproved.getPickupId()).ifPresent(laundryHistory->{
@@ -73,15 +83,20 @@ public class LaundryHistory  {
          });
          */
 
+        /*
         repository().findByPickupId(paymentApproved.getPickupId()).ifPresent(laundryHistory->{
             DeliveryStarted deliveryStarted = new DeliveryStarted(laundryHistory);
-            laundryHistory.setStatus("Delivery Started");
-            repository().save(laundryHistory);
+            //laundryHistory.setStatus("Delivery Started");
+            
             deliveryStarted.publishAfterCommit();
+            repository().save(laundryHistory);
          });
+        */
 
         
     }
+
+
     public static void changeReturnMethod(ReturnMethodChanged returnMethodChanged){
 
         /** Example 1:  new item 
@@ -101,9 +116,16 @@ public class LaundryHistory  {
          });
         */
 
+
         repository().findByPickupId(returnMethodChanged.getId()).ifPresent(laundryHistory->{
             laundryHistory.setReturnMethod(returnMethodChanged.getReturnMethod());
             repository().save(laundryHistory);
+
+            DeliveryRequestCanceled deliveryRequestCanceled = new DeliveryRequestCanceled();
+            deliveryRequestCanceled.setId(laundryHistory.getId());
+            deliveryRequestCanceled.setPickupId(laundryHistory.getPickupId());
+            deliveryRequestCanceled.setReturnMethod(laundryHistory.getReturnMethod());
+            deliveryRequestCanceled.publishAfterCommit();
         });
     
     }
@@ -130,8 +152,8 @@ public class LaundryHistory  {
 
         repository().findByPickupId(paymentCanceled.getId()).ifPresent(laundryHistory->{
             // kafka publish.
-            DeliveryRequestCanceled deliveryRequestCanceled = new DeliveryRequestCanceled(laundryHistory);
-            deliveryRequestCanceled.publishAfterCommit();
+            //DeliveryRequestCanceled deliveryRequestCanceled = new DeliveryRequestCanceled(laundryHistory);
+            //deliveryRequestCanceled.publishAfterCommit();
 
             // delivery 데이터 삭제.
             repository().delete(laundryHistory);

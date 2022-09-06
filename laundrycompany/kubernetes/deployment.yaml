@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: laundrycompany
-          image: username/laundrycompany:latest
+          image: 936103362868.dkr.ecr.eu-central-1.amazonaws.com/laundrycompany:v1
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -35,3 +35,14 @@ spec:
             timeoutSeconds: 2
             periodSeconds: 5
             failureThreshold: 5
+          env:
+            - name: MAX_LAUNDRYCOUNT_PER_PERSON
+              valueFrom:
+                configMapKeyRef:
+                  name: team01-config
+                  key: max_laundrycount_per_person
+            - name: UI_PROPERTIES_FILE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: team01-config
+                  key: ui_properties_file_name
